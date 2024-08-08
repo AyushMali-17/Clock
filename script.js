@@ -1,4 +1,9 @@
-let clockCount = 5;
+let clockCount = 1;
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadClocks();
+    startClocks();
+});
 
 function updateClock(timezone, hourHand, minuteHand, secondHand) {
     const now = new Date().toLocaleString("en-US", { timeZone: timezone });
@@ -63,6 +68,7 @@ function addClock() {
         <div class="timezone">New Clock</div>
     `;
     clockContainer.appendChild(newClock);
+    saveClocks();
     startClocks();
 }
 
@@ -72,6 +78,7 @@ function removeClock() {
         const clockToRemove = document.getElementById(`clock${clockCount}`);
         clockContainer.removeChild(clockToRemove);
         clockCount--;
+        saveClocks();
     } else {
         alert("At least one clock must remain.");
     }
@@ -96,10 +103,46 @@ function addCustomClock() {
         `;
         clockContainer.appendChild(newClock);
         timezoneInput.value = '';
+        saveClocks();
         startClocks();
     } else {
         alert("Please enter a valid timezone.");
     }
 }
 
-window.onload = startClocks;
+function saveClocks() {
+    const clockData = [];
+    for (let i = 1; i <= clockCount; i++) {
+        const timezone = document.getElementById(`clock${i}`).querySelector('.timezone').textContent;
+        clockData.push(timezone);
+    }
+    localStorage.setItem('clockData', JSON.stringify(clockData));
+}
+
+function loadClocks() {
+    const clockData = JSON.parse(localStorage.getItem('clockData'));
+    if (clockData && clockData.length > 0) {
+        clockCount = clockData.length;
+        const clockContainer = document.getElementById('clockContainer');
+        clockContainer.innerHTML = '';
+        clockData.forEach((timezone, index) => {
+            const newClock = document.createElement('div');
+            newClock.classList.add('clock');
+            newClock.id = `clock${index + 1}`;
+            newClock.innerHTML = `
+                <div class="face">
+                    <div class="hand hour" id="hour${index + 1}"></div>
+                    <div class="hand minute" id="minute${index + 1}"></div>
+                    <div class="hand second" id="second${index + 1}"></div>
+                </div>
+                <div class="timezone">${timezone}</div>
+            `;
+            clockContainer.appendChild(newClock);
+        });
+    }
+}
+
+function resetClocks() {
+    localStorage.removeItem('clockData');
+    location.reload();
+}
