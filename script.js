@@ -1,3 +1,5 @@
+let clockCount = 5;
+
 function updateClock(timezone, hourHand, minuteHand, secondHand) {
     const now = new Date().toLocaleString("en-US", { timeZone: timezone });
     const time = new Date(now);
@@ -16,22 +18,16 @@ function updateClock(timezone, hourHand, minuteHand, secondHand) {
 }
 
 function startClocks() {
-    const clocks = [
-        { timezone: 'America/New_York', hour: 'hour1', minute: 'minute1', second: 'second1' },
-        { timezone: 'Europe/London', hour: 'hour2', minute: 'minute2', second: 'second2' },
-        { timezone: 'Asia/Tokyo', hour: 'hour3', minute: 'minute3', second: 'second3' },
-        { timezone: 'Australia/Sydney', hour: 'hour4', minute: 'minute4', second: 'second4' },
-        { timezone: 'Europe/Moscow', hour: 'hour5', minute: 'minute5', second: 'second5' }
-    ];
+    for (let i = 1; i <= clockCount; i++) {
+        const hour = document.getElementById(`hour${i}`);
+        const minute = document.getElementById(`minute${i}`);
+        const second = document.getElementById(`second${i}`);
+        const timezone = document.getElementById(`clock${i}`).querySelector('.timezone').textContent;
 
-    setInterval(() => {
-        clocks.forEach(clock => {
-            const hourHand = document.getElementById(clock.hour);
-            const minuteHand = document.getElementById(clock.minute);
-            const secondHand = document.getElementById(clock.second);
-            updateClock(clock.timezone, hourHand, minuteHand, secondHand);
-        });
-    }, 1000);
+        setInterval(() => {
+            updateClock(timezone, hour, minute, second);
+        }, 1000);
+    }
 }
 
 function changeColors() {
@@ -52,4 +48,58 @@ function toggleRotation() {
     });
 }
 
-startClocks();
+function addClock() {
+    clockCount++;
+    const clockContainer = document.getElementById('clockContainer');
+    const newClock = document.createElement('div');
+    newClock.classList.add('clock');
+    newClock.id = `clock${clockCount}`;
+    newClock.innerHTML = `
+        <div class="face">
+            <div class="hand hour" id="hour${clockCount}"></div>
+            <div class="hand minute" id="minute${clockCount}"></div>
+            <div class="hand second" id="second${clockCount}"></div>
+        </div>
+        <div class="timezone">New Clock</div>
+    `;
+    clockContainer.appendChild(newClock);
+    startClocks();
+}
+
+function removeClock() {
+    if (clockCount > 1) {
+        const clockContainer = document.getElementById('clockContainer');
+        const clockToRemove = document.getElementById(`clock${clockCount}`);
+        clockContainer.removeChild(clockToRemove);
+        clockCount--;
+    } else {
+        alert("At least one clock must remain.");
+    }
+}
+
+function addCustomClock() {
+    const timezoneInput = document.getElementById('timezoneInput');
+    const timezone = timezoneInput.value.trim();
+    if (timezone) {
+        clockCount++;
+        const clockContainer = document.getElementById('clockContainer');
+        const newClock = document.createElement('div');
+        newClock.classList.add('clock');
+        newClock.id = `clock${clockCount}`;
+        newClock.innerHTML = `
+            <div class="face">
+                <div class="hand hour" id="hour${clockCount}"></div>
+                <div class="hand minute" id="minute${clockCount}"></div>
+                <div class="hand second" id="second${clockCount}"></div>
+            </div>
+            <div class="timezone">${timezone}</div>
+        `;
+        clockContainer.appendChild(newClock);
+        timezoneInput.value = '';
+        startClocks();
+    } else {
+        alert("Please enter a valid timezone.");
+    }
+}
+
+window.onload = startClocks;

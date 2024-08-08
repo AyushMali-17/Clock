@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="clock-container">
+    <div class="clock-container" id="clockContainer">
         <div id="clock1" class="clock">
             <div class="face">
                 <div class="hand hour" id="hour1"></div>
@@ -52,6 +52,12 @@
     <div class="controls">
         <button onclick="changeColors()">Change Colors</button>
         <button onclick="toggleRotation()">Toggle Rotation</button>
+        <button onclick="addClock()">Add Clock</button>
+        <button onclick="removeClock()">Remove Clock</button>
+    </div>
+    <div class="add-clock-form">
+        <input type="text" id="timezoneInput" placeholder="Enter Timezone (e.g., Asia/Kolkata)">
+        <button onclick="addCustomClock()">Add Custom Clock</button>
     </div>
     <script src="script.js"></script>
 </body>

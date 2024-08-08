@@ -16,6 +16,7 @@ body {
     justify-content: space-around;
     flex-wrap: wrap;
     width: 90%;
+    margin-bottom: 20px;
 }
 
 .clock {
@@ -83,7 +84,7 @@ body {
 }
 
 .controls {
-    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 button {
@@ -99,4 +100,16 @@ button {
 
 button:hover {
     background-color: #666;
+}
+
+.add-clock-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#timezoneInput {
+    padding: 10px;
+    font-size: 1em;
+    margin-right: 10px;
 }
